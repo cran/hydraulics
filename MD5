@@ -1,0 +1,13 @@
+3039f6a9037f7a31e6a2ee3b22b7bd64 *DESCRIPTION
+47bbe5853238bb69ba66fd5a2908075e *NAMESPACE
+d59ddc4a74bfca9524d9a3b0e7191d63 *NEWS.md
+5be194597aacd5a01f880fdcf78b6e36 *R/darcy_weisbach.R
+8b5464ad9954a8c610e7241cfe28324e *R/f_colebrook.R
+3548f8d9b071cf578979a6b03d6c0208 *R/moody.R
+4f6cabe238ca0acae1c02df89dfb3794 *R/water_properties.R
+80606d8a3f448ac608299cf1d8f05539 *README.md
+15f8a166261aeaa6fd568829ffed56bf *man/colebrook_f.Rd
+f6cf7492306cfb69e2dc35b6a7345209 *man/darcyweisbach.Rd
+4968eb27320f7abf3a53b858f95d8726 *man/figures/README-moody-diagram-1.png
+e91317585cbf93c6a4cca32dfc1d48ce *man/moody.Rd
+c0867ed43fc833d916b8436e213628b7 *man/waterprops.Rd
