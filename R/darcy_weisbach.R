@@ -5,23 +5,20 @@
 #' for with water in circular pipes. the function solves for
 #' either head loss (hf), flow rate (Q), diameter (D),or roughness height,
 #' (ks) whichever is missing (not included as an argument).
-#' As with many parts of this package, techniques and formatting
-#' were drawn from Irucka Embry's iemisc package, which includes some
-#' methods with similar functionality.
 #'
-#' @param Q numeric vector that contains the flow rate [m^3/s or or ft^3/s]
-#' @param D numeric vector that contains the pipe diameter [m or ft]
-#' @param hf numeric vector that contains the head loss through the pipe section [m or ft]
-#' @param L numeric vector that contains the pipe length [m or ft],
+#' @param Q numeric vector that contains the flow rate [\eqn{m^3 s^{-1}}{m^3/s} or \eqn{ft^3 s^{-1}}{ft^3/s}]
+#' @param D numeric vector that contains the pipe diameter [\eqn{m}{m} or \eqn{ft}{ft}]
+#' @param hf numeric vector that contains the head loss through the pipe section [\eqn{m}{m} or \eqn{ft}{ft}]
+#' @param L numeric vector that contains the pipe length [\eqn{m}{m} or \eqn{ft}{ft}],
 #' @param ks numeric vector that contains the equivalent sand roughness height.
-#'  Units should be consistent with other input [m or ft]
+#'  Units should be consistent with other input [\eqn{m}{m} or \eqn{ft}{ft}]
 #' @param nu numeric vector that contains the kinematic viscosity of water,
-#'  [m2 s-1 or ft2 s-1].
+#'  [\eqn{m^2 s^{-1}}{m^2/s} or \eqn{ft^2 s^{-1}}{ft^2/s}].
 #' @param units character vector that contains the system of units [options are
 #'   \code{SI} for International System of Units and \code{Eng} for English (US customary)
 #'   units. This is used for compatibility with iemisc package
 #'
-#' @return Returns a list including the missing parameter (hf, Q, or D):
+#' @return Returns a list including the missing parameter (hf, Q, D, or ks):
 #' \itemize{
 #'   \item Q - flow rate.
 #'   \item V - flow velocity.
@@ -31,6 +28,12 @@
 #'   \item ks - roughness height
 #'   \item Re - Reynolds number
 #' }
+#'
+#' @details The Darcy-Weisbach equation was developed to estimate the head loss, \eqn{h_f}, due to friction over 
+#' a length of pipe. For circular pipes it is expressed as: 
+#' \deqn{h_f = \frac{fL}{D}\frac{V^2}{2g} = \frac{8fL}{\pi^{2}gD^{5}}Q^{2}}
+#' where \eqn{f} is the friction factor (calculated with the \code{colebrook} function and \eqn{g}
+#' is the gravitational acceleration (\eqn{9.81\frac{m}{s^2}} or \eqn{32.2\frac{ft}{s^2}}).
 #'
 #' @examples
 #'
@@ -49,6 +52,8 @@
 #' T <- 68       #water temperature, F
 #' ks <- 0.0008  #pipe roughness, ft
 #' darcyweisbach(Q = Q, hf = hf, L = L, ks = ks, nu = kvisc(T=T, units='Eng'), units = c('Eng'))
+#'
+#' @seealso \code{\link{colebrook}} for friction factor calculation
 #'
 #' @name darcyweisbach
 NULL
