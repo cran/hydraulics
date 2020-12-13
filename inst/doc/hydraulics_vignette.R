@@ -117,6 +117,15 @@ knitr::kable(format(as.data.frame(ans), digits = 2), format = "pipe", padding=0)
 ## ----manningt-2.1, message=FALSE, warning=FALSE, fig.width = 4, fig.asp = 0.6----
 xc_trap( y = 3.0, b = 20.0, m = 1.0, units = "Eng")
 
+## ----manningt-2.2, message=FALSE, warning=FALSE, fig.width = 4, fig.asp = 0.6----
+ans <- manningt(Q = 360., n = 0.015, m = 1, y = 3.0, Sf = 0.00088, units = "Eng")
+knitr::kable(format(as.data.frame(ans), digits = 2), format = "pipe", padding=0)
+cat(sprintf("Optimal bottom width: %.5f ft\n", ans$bopt))
+
+## ----manningt-2.3, message=FALSE, warning=FALSE, fig.width = 4, fig.asp = 0.6----
+ans <- manningt(Q = 360., n = 0.015, m = 1, b = 4.767534, Sf = 0.00088, units = "Eng")
+cat(sprintf("Optimal depth: %.5f ft\n", ans$yopt))
+
 ## ----manningt-3, fig.width = 4, fig.asp = 1.0---------------------------------
 spec_energy_trap( Q = 360, b = 20, m = 1, scale = 4, units = "Eng" )
 
