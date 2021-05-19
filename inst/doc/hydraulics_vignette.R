@@ -143,3 +143,33 @@ x2 <- data.frame(Q=unlist(x$Q),y=unlist(x$y),n=unlist(x$n))
 ggplot2::ggplot(data=x2,ggplot2::aes(x=y,y=Q, group=n, colour=n)) + ggplot2::geom_line() +
   ggplot2::labs(x = "y, m", y = expression(paste("Q, ", ~m^3/s)))
 
+## ----pump-1, message=FALSE, echo=FALSE, fig.align = 'center', out.width = "60%", fig.cap = "A simple hydraulic system (from https://www.castlepumps.com)"----
+knitr::include_graphics('./TDH_Example_2_Diagram.png')
+
+## ----pump-2, message=FALSE----------------------------------------------------
+ans <- darcyweisbach(Q = 1,D = 20/12, L = 3884, ks = 0.0005, nu = 1.23e-5, units = "Eng")
+cat(sprintf("Coefficient K: %.3f\n", ans$hf))
+
+## ----pump-3, message=FALSE----------------------------------------------------
+scurve <- systemcurve(hs = 30, K = ans$hf, units = "Eng")
+
+## ----pump-4, message=FALSE, echo=FALSE, fig.align = 'center', out.width = "60%", fig.cap = "A sample set of pump curves (from https://www.gouldspumps.com). The three red dots are points selected to approximate the curve"----
+knitr::include_graphics('./goulds_pump_3409.png')
+
+## ----pump-5, echo=FALSE-------------------------------------------------------
+knitr::kable(data.frame(type=c("poly1","poly2","poly3"), Equation=c("$h=a+{b}{Q}+{c}{Q}^2$","$h=a+{c}{Q}^2$","$h_{shutoff}+{c}{Q}^2$")), format="pipe", padding=0)
+
+## ----pump-6, message=FALSE----------------------------------------------------
+qgpm <- units::set_units(c(0, 5000, 7850), gallons/minute)
+qcfs <- units::set_units(qgpm, ft^3/s)
+hft <- c(81, 60, 20) #units are already in ft so setting units is optional
+pcurve <- pumpcurve(Q = qcfs, h = hft, eq = "poly2", units = "Eng")
+
+## ----pump-7, message=FALSE----------------------------------------------------
+pcurve$p
+
+## ----pump-8, message=FALSE----------------------------------------------------
+oppt <- operpoint(pcurve = pcurve, scurve = scurve)
+cat(sprintf("Operating Point: Q = %.3f, h = %.3f\n", oppt$Qop, oppt$hop))
+oppt$p
+
