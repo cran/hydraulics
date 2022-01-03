@@ -35,7 +35,14 @@ Kvisc
 units::set_units(Kvisc, m^2/s)
 units::set_units(Kvisc, ft^2/s)
 
-## ----waterprops-6, out.width="50%"--------------------------------------------
+## ----waterprops-6-------------------------------------------------------------
+vps <- svp(T = 10, units = "SI", ret_units = T)
+vps
+#convert to psi - notice the need to enclose "in" with backticks since "in" 
+#has other meanings in R
+units::set_units(vps,lbf/`in`^2)
+
+## ----waterprops-7, out.width="50%"--------------------------------------------
 Temperature <- units::set_units(seq(0, 100, 10), degree_Celsius)
 Kinematic_Viscosity <- kvisc(T = Temperature, units = 'SI', ret_units = TRUE)
 par(cex=0.8, mar = par("mar") + c(0, .2, 0, 0))
@@ -172,4 +179,38 @@ pcurve$p
 oppt <- operpoint(pcurve = pcurve, scurve = scurve)
 cat(sprintf("Operating Point: Q = %.3f, h = %.3f\n", oppt$Qop, oppt$hop))
 oppt$p
+
+## ----hc-1, message=FALSE, echo=FALSE, fig.align = 'center', out.width = "75%", fig.cap = "A sample pipe network with pipe numbers indicated in black"----
+knitr::include_graphics('./hardycross_system.png')
+
+## ----hc-2, message=FALSE------------------------------------------------------
+dfpipes <- data.frame(
+  ID = c(1,2,3,4,5,6,7,8,9,10),                                #pipe ID
+  D = c(0.3,0.2,0.2,0.2,0.2,0.15,0.25,0.15,0.15,0.25),         #diameter in m
+  L = c(250,100,125,125,100,100,125,100,100,125),              #length in m
+  f = c(.01879,.02075,.02075,.02075,.02075,.02233,.01964,.02233,.02233,.01964)
+)
+loops <- list(c(1,2,3,4,5),c(4,6,7,8),c(3,9,10,6))
+Qs <- list(c(.040,.040,.02,-.02,-.04),c(.02,0,0,-.02),c(-.02,.02,0,0))
+
+## ----hc-3, message=FALSE------------------------------------------------------
+ans <- hardycross(dfpipes = dfpipes, loops = loops, Qs = Qs, n_iter = 3, units = "SI")
+knitr::kable(ans$dfloops, digits = 4, format = "pipe", padding=0)
+
+## ----hc-4, message=FALSE------------------------------------------------------
+knitr::kable(ans$dfpipes, digits = 4, format = "pipe", padding=0)
+
+## ----hc-5, message=FALSE------------------------------------------------------
+dfpipes <- data.frame(
+  ID = c(1,2,3,4,5,6,7,8,9,10),                         #pipe ID
+  D = c(0.3,0.2,0.2,0.2,0.2,0.15,0.25,0.15,0.15,0.25),  #diameter in m
+  L = c(250,100,125,125,100,100,125,100,100,125),       #length in m
+  ks = rep(0.00025,10)                                  #absolute roughness, m
+)
+loops <- list(c(1,2,3,4,5),c(4,6,7,8),c(3,9,10,6))
+Qs <- list(c(.040,.040,.02,-.02,-.04),c(.02,0,0,-.02),c(-.02,.02,0,0))
+
+## ----hc-6, message=FALSE------------------------------------------------------
+ans <- hardycross(dfpipes = dfpipes, loops = loops, Qs = Qs, n_iter = 3, units = "SI")
+knitr::kable(ans$dfpipes, digits = 4, format = "pipe", padding=0)
 
