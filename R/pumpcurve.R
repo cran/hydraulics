@@ -1,8 +1,10 @@
 #' Fits a polynomial curve to three or more points from a pump characteristic
-#' curve. This allows solving for an operating point of the pump in a 
+#' curve to be used in solving for an operating point of the pump in a 
 #' piping system.
 #' 
-#' A portion of this is based on
+#' Fits a polynomial curve to three or more points from a pump characteristic
+#' curve. This allows solving for an operating point of the pump in a 
+#' piping system. A portion of this is based on
 #' https://github.com/PhDMeiwp/basicTrendline/blob/master/R/trendline.R
 #' 
 #' @param Q  Numeric vector of flow rates for selected points on the pump curve [\eqn{m^3 s^{-1}}{m^3/s} or \eqn{ft^3 s^{-1}}{ft^3/s}]
@@ -66,7 +68,7 @@ pumpcurve <- function (Q = NULL, h = NULL, eq = "poly1", units = c("SI", "Eng"))
   #check if any values have class 'units' and change to numeric if necessary
   for( i  in c("Q", "h") ) {
     v <- get(i)
-    if(class(v) == "units" ) assign(i, units::drop_units(v))
+    if(inherits(v, "units")) assign(i, units::drop_units(v))
   }
   
   nQ <- length(Q)
