@@ -48,6 +48,27 @@ Kinematic_Viscosity <- kvisc(T = Temperature, units = 'SI', ret_units = TRUE)
 par(cex=0.8, mar = par("mar") + c(0, .2, 0, 0))
 plot(Temperature, Kinematic_Viscosity, type="l")
 
+## ----waterprops-table---------------------------------------------------------
+tbl <- water_table(units = "SI")
+tbl
+
+## ----waterprops-table2--------------------------------------------------------
+unitlist <- sapply(unname(tbl),units::deparse_unit)
+colnames <- names(tbl)
+tbl <- docxtools::format_engr(units::drop_units(tbl), sigdig = c(0, 4, 4, 4, 4, 4, 3, 3))
+tbl2 <- knitr::kable(tbl, col.names = unitlist, align = "c", format = "html")
+kableExtra::add_header_above(tbl2, header = colnames, line = F, align = "c")
+
+## ----waterprops-atmtable1, echo=FALSE-----------------------------------------
+knitr::kable(data.frame(Function=c("atmtemp","atmpres","atmdens"), Returns=c("Atmospheric Temperature","Pressure","Density")), format="pipe", padding=0)
+
+## ----waterprops-atmtable2-----------------------------------------------------
+atmpres(alt = 3000, units = "SI", ret_units = TRUE)
+
+## ----waterprops-atmtable3-----------------------------------------------------
+tbl <- atmos_table(units = "SI")
+tbl
+
 ## ----constants-1, echo=FALSE--------------------------------------------------
 knitr::kable(data.frame(Fr=c("<1.0","=1.0",">1.0"), Condition=c("subcritical","critical","supercritical")), format="pipe", padding=0)
 

@@ -1,7 +1,7 @@
 Package: hydraulics
 Type: Package
 Title: Basic Pipe and Open Channel Hydraulics
-Version: 0.4.1
+Version: 0.5.0
 Author: Ed Maurer [aut, cre], Irucka Embry [aut, ctb] (iemisc code)
 Maintainer: Ed Maurer <emaurer@scu.edu>
 Description: Functions for basic hydraulic calculations related to 
@@ -25,11 +25,11 @@ URL: https://github.com/EdM44/hydraulics,
 License: GPL (>= 3)
 Depends: R (>= 3.6.0)
 Encoding: UTF-8
-Imports: ggplot2, grid, gtools, reshape2, stats, units
-Suggests: knitr, rmarkdown
-RoxygenNote: 7.1.2
+Imports: ggplot2, grid, gtools, reshape2, stats, tibble, units
+Suggests: docxtools, kableExtra, knitr, rmarkdown
+RoxygenNote: 7.2.1
 VignetteBuilder: knitr, rmarkdown
 NeedsCompilation: no
-Packaged: 2022-03-07 00:53:08 UTC; emaurer
+Packaged: 2022-10-11 00:38:16 UTC; emaurer
 Repository: CRAN
-Date/Publication: 2022-03-07 07:50:19 UTC
+Date/Publication: 2022-10-11 02:20:06 UTC
