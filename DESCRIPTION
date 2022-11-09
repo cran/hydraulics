@@ -1,7 +1,7 @@
 Package: hydraulics
 Type: Package
 Title: Basic Pipe and Open Channel Hydraulics
-Version: 0.5.0
+Version: 0.6.0
 Author: Ed Maurer [aut, cre], Irucka Embry [aut, ctb] (iemisc code)
 Maintainer: Ed Maurer <emaurer@scu.edu>
 Description: Functions for basic hydraulic calculations related to 
@@ -17,7 +17,8 @@ Description: Functions for basic hydraulic calculations related to
     flow, the Manning equation is used, again solving for missing parameters. 
     The derivation of and solutions using the Darcy-Weisbach equation and the
     Manning equation are outlined in many fluid mechanics texts such as 
-    Finnemore and Franzini (2002, ISBN:978-0072432022). For the Manning equation
+    Finnemore and Franzini (2002, ISBN:978-0072432022). Some gradually- and 
+    rapidly-varied flow functions are included. For the Manning equation
     solutions, this package uses modifications of original code from the 'iemisc' 
     package by Irucka Embry.
 URL: https://github.com/EdM44/hydraulics,
@@ -25,11 +26,11 @@ URL: https://github.com/EdM44/hydraulics,
 License: GPL (>= 3)
 Depends: R (>= 3.6.0)
 Encoding: UTF-8
-Imports: ggplot2, grid, gtools, reshape2, stats, tibble, units
+Imports: ggplot2, grid, gtools, purrr, reshape2, stats, tibble, units
 Suggests: docxtools, kableExtra, knitr, rmarkdown
 RoxygenNote: 7.2.1
 VignetteBuilder: knitr, rmarkdown
 NeedsCompilation: no
-Packaged: 2022-10-11 00:38:16 UTC; emaurer
+Packaged: 2022-11-09 01:34:42 UTC; emaurer
 Repository: CRAN
-Date/Publication: 2022-10-11 02:20:06 UTC
+Date/Publication: 2022-11-09 08:10:02 UTC
