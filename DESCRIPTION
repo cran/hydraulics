@@ -1,7 +1,7 @@
 Package: hydraulics
 Type: Package
 Title: Basic Pipe and Open Channel Hydraulics
-Version: 0.6.0
+Version: 0.6.1
 Author: Ed Maurer [aut, cre], Irucka Embry [aut, ctb] (iemisc code)
 Maintainer: Ed Maurer <emaurer@scu.edu>
 Description: Functions for basic hydraulic calculations related to 
@@ -31,6 +31,6 @@ Suggests: docxtools, kableExtra, knitr, rmarkdown
 RoxygenNote: 7.2.1
 VignetteBuilder: knitr, rmarkdown
 NeedsCompilation: no
-Packaged: 2022-11-09 01:34:42 UTC; emaurer
+Packaged: 2022-12-06 22:17:17 UTC; emaurer
 Repository: CRAN
-Date/Publication: 2022-11-09 08:10:02 UTC
+Date/Publication: 2022-12-06 22:30:02 UTC
