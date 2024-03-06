@@ -54,7 +54,7 @@ par(cex=0.8, mgp = c(2,0.7,0))
 plot(Ts, nus, xlab = xlbl, ylab = ylbl, type="l")
 ```
 
-The water property functions can also be called with the _ret_units_ parameter, in which case the function returns an object of class _units_, as designated by the package `units`. This enables capabilities for new units being deduced as operations are performed on the values. Concise examples are in the [vignettes for the 'units' package](https://cran.r-project.org/package=units).
+The water property functions can also be called with the _ret_units_ parameter, in which case the function returns an object of class _units_, as designated by the package [units](https://cran.r-project.org/package=units). This enables capabilities for new units being deduced as operations are performed on the values. Concise examples are in the [vignettes for the 'units' package](https://cran.r-project.org/package=units).
 
 ```{r waterprops-4}
 T <- 25
@@ -98,11 +98,23 @@ tbl <- water_table(units = "SI")
 tbl
 ```
 
-The table can be reformatted to something more attractive using the _kableExtra_ and _docxtools_ packages.
+The table can be reformatted to something more attractive using the [kableExtra](https://cran.r-project.org/package=kableExtra) and [formatdown](https://cran.r-project.org/package=formatdown) packages.
 ```{r waterprops-table2}
 unitlist <- sapply(unname(tbl),units::deparse_unit)
 colnames <- names(tbl)
-tbl <- docxtools::format_engr(units::drop_units(tbl), sigdig = c(0, 4, 4, 4, 4, 4, 3, 3))
+tbl <- units::drop_units(tbl)
+# Format column as integer
+tbl$Temp <- formatdown::format_decimal(tbl$Temp, digits = 0)
+# Format column with one decimal
+tbl$Density <- formatdown::format_decimal(tbl$Density, digits = 1)
+# Format multiple columns using power-of-ten notation to 4 significant digits
+cols_we_want = c("Spec_Weight", "Viscosity", "Kinem_Visc", "Sat_VP")
+tbl[, cols_we_want] <- lapply(tbl[, cols_we_want], function (x) {formatdown::format_power(x, digits = 4, format = "sci", omit_power = c(-1, 4))}
+)
+# Format multiple columns using power-of-ten notation to 3 significant digits
+cols_we_want = c("Surf_Tens", "Bulk_Mod")
+tbl[, cols_we_want] <- lapply(tbl[, cols_we_want], function (x) {formatdown::format_power(x, digits = 3, format = "sci", omit_power = c(-1, 4))}
+)
 tbl2 <- knitr::kable(tbl, col.names = unitlist, align = "c", format = "html")
 kableExtra::add_header_above(tbl2, header = colnames, line = F, align = "c")
 ```
@@ -196,8 +208,14 @@ Another example of the use of this package would be in a laboratory setting, whe
 knitr::kable(data.frame(Q_liter_s=c("0.20","0.24","0.30"), Headloss_m=c("0.052","0.073","0.110")), format="pipe", padding=0)
 ```
 
-Roughness values are calculated as shown below, and the results plotted on a Moody diagram as a reality check.
-```{r pipe-6, message=FALSE, fig.width = 5, fig.asp = .62}
+The absolute roughness can be calculated by providing the other variables.
+```{r pipe-6, message=FALSE}
+ans <- darcyweisbach(Q = 0.00020, hf = 0.052, L = 3.0, D = 0.025, nu = kvisc(T=20, units='SI'), units = c('SI'))
+cat(sprintf("Absolute roughness: %.6f m\nFriction Factor: %.4f\nDiameter: %.2f m\n", ans$ks, ans$f, ans$D))
+```
+
+Several roughness values can be calculated in one call as shown below, and the results plotted on a Moody diagram as a reality check.
+```{r pipe-7, message=FALSE, fig.width = 5, fig.asp = .62}
 Qs = c(0.00020, 0.00024, 0.00030) #converted to m^3/s
 hfs <- c(0.052,0.073,0.110)
 ans <- mapply(darcyweisbach, Q=Qs, hf=hfs, MoreArgs = 
@@ -221,6 +239,12 @@ As with full flow in circular pipes, any one of the variables in the Manning equ
 
 ```{r manningc-1, message=FALSE, warning=FALSE}
 ans <- manningc(Q=0.01, n=0.013, Sf=0.001, d = 0.2, units="SI", ret_units = TRUE)
+knitr::kable(format(as.data.frame(ans), digits = 2), format = "pipe", padding=0)
+```
+
+For circular pipes, there is also an option to allow Manning _n_ to vary with depth, in which case the specified _n_ is assumed to be that corresponding to full pipe flow. The output contains the _n_ as adjusted.
+```{r manningc-1b, message=FALSE, warning=FALSE}
+ans <- manningc(Q=0.01, n=0.013, Sf=0.001, d = 0.2, n_var=TRUE, units="SI", ret_units = TRUE)
 knitr::kable(format(as.data.frame(ans), digits = 2), format = "pipe", padding=0)
 ```
 
@@ -278,7 +302,7 @@ spec_energy_trap( Q = 360, b = 20, m = 1, scale = 4, units = "Eng" )
 
 This provides an illustration that for y=3 ft the flow is subcritical (above the critical depth). Specific energy for the conditions of the prior example is $E=y+\frac{V^2}{2g}=3.0+\frac{5.22^2}{2*32.2}=3.42 ft$. If the channel bottom had an abrupt rise of $E-E_c=3.42-3.03=0.39 ft$ critical depth would occur over the hump. A rise of anything greater than that would cause damming to occur. Once flow over a hump is critical, downstream of the hump the flow will be in supercritical conditions, flowing at the _alternate depth_.
 
-The specific energy for a given depth _y_ and alternate depth can be added to the plot by including an argument for depth, y.
+The specific energy for a given depth _y_ and alternate depth can be added to the plot by including an argument for depth, y (two depths may also be specified using the argument `y=c(<depth1>, <depth2>)`.
 ```{r manningt-4, fig.width = 4, fig.asp = 1.0}
 spec_energy_trap( Q = 360, b = 20, m = 1, scale = 4, y=3.0, units = "Eng" )
 ```

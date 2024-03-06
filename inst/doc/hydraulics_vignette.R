@@ -1,4 +1,4 @@
-## ---- include = FALSE---------------------------------------------------------
+## ----include = FALSE----------------------------------------------------------
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
@@ -55,7 +55,19 @@ tbl
 ## ----waterprops-table2--------------------------------------------------------
 unitlist <- sapply(unname(tbl),units::deparse_unit)
 colnames <- names(tbl)
-tbl <- docxtools::format_engr(units::drop_units(tbl), sigdig = c(0, 4, 4, 4, 4, 4, 3, 3))
+tbl <- units::drop_units(tbl)
+# Format column as integer
+tbl$Temp <- formatdown::format_decimal(tbl$Temp, digits = 0)
+# Format column with one decimal
+tbl$Density <- formatdown::format_decimal(tbl$Density, digits = 1)
+# Format multiple columns using power-of-ten notation to 4 significant digits
+cols_we_want = c("Spec_Weight", "Viscosity", "Kinem_Visc", "Sat_VP")
+tbl[, cols_we_want] <- lapply(tbl[, cols_we_want], function (x) {formatdown::format_power(x, digits = 4, format = "sci", omit_power = c(-1, 4))}
+)
+# Format multiple columns using power-of-ten notation to 3 significant digits
+cols_we_want = c("Surf_Tens", "Bulk_Mod")
+tbl[, cols_we_want] <- lapply(tbl[, cols_we_want], function (x) {formatdown::format_power(x, digits = 3, format = "sci", omit_power = c(-1, 4))}
+)
 tbl2 <- knitr::kable(tbl, col.names = unitlist, align = "c", format = "html")
 kableExtra::add_header_above(tbl2, header = colnames, line = F, align = "c")
 
@@ -113,7 +125,11 @@ grid()
 ## ----pipe-5, echo=FALSE-------------------------------------------------------
 knitr::kable(data.frame(Q_liter_s=c("0.20","0.24","0.30"), Headloss_m=c("0.052","0.073","0.110")), format="pipe", padding=0)
 
-## ----pipe-6, message=FALSE, fig.width = 5, fig.asp = .62----------------------
+## ----pipe-6, message=FALSE----------------------------------------------------
+ans <- darcyweisbach(Q = 0.00020, hf = 0.052, L = 3.0, D = 0.025, nu = kvisc(T=20, units='SI'), units = c('SI'))
+cat(sprintf("Absolute roughness: %.6f m\nFriction Factor: %.4f\nDiameter: %.2f m\n", ans$ks, ans$f, ans$D))
+
+## ----pipe-7, message=FALSE, fig.width = 5, fig.asp = .62----------------------
 Qs = c(0.00020, 0.00024, 0.00030) #converted to m^3/s
 hfs <- c(0.052,0.073,0.110)
 ans <- mapply(darcyweisbach, Q=Qs, hf=hfs, MoreArgs = 
@@ -127,6 +143,10 @@ moody(Re = Re_values, f = f_values)
 
 ## ----manningc-1, message=FALSE, warning=FALSE---------------------------------
 ans <- manningc(Q=0.01, n=0.013, Sf=0.001, d = 0.2, units="SI", ret_units = TRUE)
+knitr::kable(format(as.data.frame(ans), digits = 2), format = "pipe", padding=0)
+
+## ----manningc-1b, message=FALSE, warning=FALSE--------------------------------
+ans <- manningc(Q=0.01, n=0.013, Sf=0.001, d = 0.2, n_var=TRUE, units="SI", ret_units = TRUE)
 knitr::kable(format(as.data.frame(ans), digits = 2), format = "pipe", padding=0)
 
 ## ----manningc-2, message=FALSE, warning=FALSE, out.width="40%"----------------
