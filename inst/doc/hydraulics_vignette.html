@@ -12,7 +12,7 @@
 
 <meta name="author" content="Ed Maurer" />
 
-<meta name="date" content="2024-03-05" />
+<meta name="date" content="2024-11-17" />
 
 <title>Hydraulics Vignette</title>
 
@@ -564,7 +564,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Hydraulics Vignette</h1>
 <h4 class="author">Ed Maurer</h4>
-<h4 class="date">2024-03-05</h4>
+<h4 class="date">2024-11-17</h4>
 
 
 <div id="TOC">
@@ -689,23 +689,34 @@ or <em>Eng</em> units.</p>
 <a href="https://cran.r-project.org/package=kableExtra">kableExtra</a>
 and <a href="https://cran.r-project.org/package=formatdown">formatdown</a>
 packages.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>unitlist <span class="ot">&lt;-</span> <span class="fu">sapply</span>(<span class="fu">unname</span>(tbl),units<span class="sc">::</span>deparse_unit)</span>
-<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a>colnames <span class="ot">&lt;-</span> <span class="fu">names</span>(tbl)</span>
-<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a>tbl <span class="ot">&lt;-</span> units<span class="sc">::</span><span class="fu">drop_units</span>(tbl)</span>
-<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a><span class="co"># Format column as integer</span></span>
-<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a>tbl<span class="sc">$</span>Temp <span class="ot">&lt;-</span> formatdown<span class="sc">::</span><span class="fu">format_decimal</span>(tbl<span class="sc">$</span>Temp, <span class="at">digits =</span> <span class="dv">0</span>)</span>
-<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a><span class="co"># Format column with one decimal</span></span>
-<span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a>tbl<span class="sc">$</span>Density <span class="ot">&lt;-</span> formatdown<span class="sc">::</span><span class="fu">format_decimal</span>(tbl<span class="sc">$</span>Density, <span class="at">digits =</span> <span class="dv">1</span>)</span>
-<span id="cb10-8"><a href="#cb10-8" tabindex="-1"></a><span class="co"># Format multiple columns using power-of-ten notation to 4 significant digits</span></span>
-<span id="cb10-9"><a href="#cb10-9" tabindex="-1"></a>cols_we_want <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;Spec_Weight&quot;</span>, <span class="st">&quot;Viscosity&quot;</span>, <span class="st">&quot;Kinem_Visc&quot;</span>, <span class="st">&quot;Sat_VP&quot;</span>)</span>
-<span id="cb10-10"><a href="#cb10-10" tabindex="-1"></a>tbl[, cols_we_want] <span class="ot">&lt;-</span> <span class="fu">lapply</span>(tbl[, cols_we_want], <span class="cf">function</span> (x) {formatdown<span class="sc">::</span><span class="fu">format_power</span>(x, <span class="at">digits =</span> <span class="dv">4</span>, <span class="at">format =</span> <span class="st">&quot;sci&quot;</span>, <span class="at">omit_power =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">4</span>))}</span>
-<span id="cb10-11"><a href="#cb10-11" tabindex="-1"></a>)</span>
-<span id="cb10-12"><a href="#cb10-12" tabindex="-1"></a><span class="co"># Format multiple columns using power-of-ten notation to 3 significant digits</span></span>
-<span id="cb10-13"><a href="#cb10-13" tabindex="-1"></a>cols_we_want <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;Surf_Tens&quot;</span>, <span class="st">&quot;Bulk_Mod&quot;</span>)</span>
-<span id="cb10-14"><a href="#cb10-14" tabindex="-1"></a>tbl[, cols_we_want] <span class="ot">&lt;-</span> <span class="fu">lapply</span>(tbl[, cols_we_want], <span class="cf">function</span> (x) {formatdown<span class="sc">::</span><span class="fu">format_power</span>(x, <span class="at">digits =</span> <span class="dv">3</span>, <span class="at">format =</span> <span class="st">&quot;sci&quot;</span>, <span class="at">omit_power =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">4</span>))}</span>
-<span id="cb10-15"><a href="#cb10-15" tabindex="-1"></a>)</span>
-<span id="cb10-16"><a href="#cb10-16" tabindex="-1"></a>tbl2 <span class="ot">&lt;-</span> knitr<span class="sc">::</span><span class="fu">kable</span>(tbl, <span class="at">col.names =</span> unitlist, <span class="at">align =</span> <span class="st">&quot;c&quot;</span>, <span class="at">format =</span> <span class="st">&quot;html&quot;</span>)</span>
-<span id="cb10-17"><a href="#cb10-17" tabindex="-1"></a>kableExtra<span class="sc">::</span><span class="fu">add_header_above</span>(tbl2, <span class="at">header =</span> colnames, <span class="at">line =</span> F, <span class="at">align =</span> <span class="st">&quot;c&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="co"># Manage units</span></span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a>unitlist <span class="ot">&lt;-</span> <span class="fu">sapply</span>(<span class="fu">unname</span>(tbl), units<span class="sc">::</span>deparse_unit)</span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a>colnames <span class="ot">&lt;-</span> <span class="fu">names</span>(tbl)</span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a>tbl <span class="ot">&lt;-</span> units<span class="sc">::</span><span class="fu">drop_units</span>(tbl)</span>
+<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a></span>
+<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a><span class="co"># Assign size argument for table output</span></span>
+<span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a>formatdown<span class="sc">::</span><span class="fu">formatdown_options</span>(<span class="at">size =</span> <span class="st">&quot;small&quot;</span>)</span>
+<span id="cb10-8"><a href="#cb10-8" tabindex="-1"></a><span class="co"># Format text as-is (i.e., as integers)</span></span>
+<span id="cb10-9"><a href="#cb10-9" tabindex="-1"></a>tbl<span class="sc">$</span>Temp <span class="ot">&lt;-</span> formatdown<span class="sc">::</span><span class="fu">format_text</span>(tbl<span class="sc">$</span>Temp)</span>
+<span id="cb10-10"><a href="#cb10-10" tabindex="-1"></a><span class="co"># Format decimals to 4 significant digits</span></span>
+<span id="cb10-11"><a href="#cb10-11" tabindex="-1"></a>cols_we_want <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;Density&quot;</span>, <span class="st">&quot;Spec_Weight&quot;</span>)</span>
+<span id="cb10-12"><a href="#cb10-12" tabindex="-1"></a>tbl[, cols_we_want] <span class="ot">&lt;-</span> <span class="fu">lapply</span>(tbl[, cols_we_want], <span class="cf">function</span> (x) {formatdown<span class="sc">::</span><span class="fu">format_dcml</span>(x, <span class="at">digits =</span> <span class="dv">4</span>)}</span>
+<span id="cb10-13"><a href="#cb10-13" tabindex="-1"></a>)</span>
+<span id="cb10-14"><a href="#cb10-14" tabindex="-1"></a><span class="co"># Format using power-of-ten notation to 4 significant digits</span></span>
+<span id="cb10-15"><a href="#cb10-15" tabindex="-1"></a>cols_we_want <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;Viscosity&quot;</span>, <span class="st">&quot;Kinem_Visc&quot;</span>)</span>
+<span id="cb10-16"><a href="#cb10-16" tabindex="-1"></a>tbl[, cols_we_want] <span class="ot">&lt;-</span> <span class="fu">lapply</span>(tbl[, cols_we_want], <span class="cf">function</span> (x) {formatdown<span class="sc">::</span><span class="fu">format_engr</span>(x, <span class="at">digits =</span> <span class="dv">4</span>)}</span>
+<span id="cb10-17"><a href="#cb10-17" tabindex="-1"></a>)</span>
+<span id="cb10-18"><a href="#cb10-18" tabindex="-1"></a><span class="co"># Exponent set to 3 for all entries</span></span>
+<span id="cb10-19"><a href="#cb10-19" tabindex="-1"></a>tbl<span class="sc">$</span>Sat_VP <span class="ot">&lt;-</span> formatdown<span class="sc">::</span><span class="fu">format_engr</span>(tbl<span class="sc">$</span>Sat_VP, <span class="at">digits =</span> <span class="dv">4</span>, <span class="at">set_power =</span> <span class="dv">3</span>)</span>
+<span id="cb10-20"><a href="#cb10-20" tabindex="-1"></a><span class="co"># Format using power-of-ten notation to 3 significant digits</span></span>
+<span id="cb10-21"><a href="#cb10-21" tabindex="-1"></a>cols_we_want <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;Surf_Tens&quot;</span>, <span class="st">&quot;Bulk_Mod&quot;</span>)</span>
+<span id="cb10-22"><a href="#cb10-22" tabindex="-1"></a>tbl[, cols_we_want] <span class="ot">&lt;-</span> <span class="fu">lapply</span>(tbl[, cols_we_want], <span class="cf">function</span> (x) {formatdown<span class="sc">::</span><span class="fu">format_engr</span>(x, <span class="at">digits =</span> <span class="dv">3</span>)}</span>
+<span id="cb10-23"><a href="#cb10-23" tabindex="-1"></a>)</span>
+<span id="cb10-24"><a href="#cb10-24" tabindex="-1"></a><span class="co"># Reset size option</span></span>
+<span id="cb10-25"><a href="#cb10-25" tabindex="-1"></a>formatdown<span class="sc">::</span><span class="fu">formatdown_options</span>(<span class="at">reset =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb10-26"><a href="#cb10-26" tabindex="-1"></a></span>
+<span id="cb10-27"><a href="#cb10-27" tabindex="-1"></a>tbl2 <span class="ot">&lt;-</span> knitr<span class="sc">::</span><span class="fu">kable</span>(tbl, <span class="at">col.names =</span> unitlist, <span class="at">align =</span> <span class="st">&quot;c&quot;</span>, <span class="at">format =</span> <span class="st">&quot;html&quot;</span>)</span>
+<span id="cb10-28"><a href="#cb10-28" tabindex="-1"></a>kableExtra<span class="sc">::</span><span class="fu">add_header_above</span>(tbl2, <span class="at">header =</span> colnames, <span class="at">line =</span> F, <span class="at">align =</span> <span class="st">&quot;c&quot;</span>)</span></code></pre></div>
 <table>
 <thead>
 <tr>
@@ -780,548 +791,548 @@ Pa
 <tbody>
 <tr>
 <td style="text-align:center;">
-<span class="math inline">\(0\)</span>
+<span class="math inline">\(\small \mathrm{0}\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(999.9\)</span>
+<span class="math inline">\(\small 999.9\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(9809\)</span>
+<span class="math inline">\(\small 9809\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(1.734 \times 10^{-3}\)</span>
+<span class="math inline">\(\small 1.734 \times 10^{-3}\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(1.734 \times 10^{-6}\)</span>
+<span class="math inline">\(\small 1.734 \times 10^{-6}\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(611.2\)</span>
+<span class="math inline">\(\small 0.6112 \times 10^{3}\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(7.57 \times 10^{-2}\)</span>
+<span class="math inline">\(\small 75.7 \times 10^{-3}\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(2.02 \times 10^{9}\)</span>
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-<span class="math inline">\(5\)</span>
-</td>
-<td style="text-align:center;">
-<span class="math inline">\(1000.0\)</span>
-</td>
-<td style="text-align:center;">
-<span class="math inline">\(9810\)</span>
-</td>
-<td style="text-align:center;">
-<span class="math inline">\(1.501 \times 10^{-3}\)</span>
-</td>
-<td style="text-align:center;">
-<span class="math inline">\(1.501 \times 10^{-6}\)</span>
-</td>
-<td style="text-align:center;">
-<span class="math inline">\(872.6\)</span>
-</td>
-<td style="text-align:center;">
-<span class="math inline">\(7.49 \times 10^{-2}\)</span>
-</td>
-<td style="text-align:center;">
-<span class="math inline">\(2.06 \times 10^{9}\)</span>
+<span class="math inline">\(\small 2.02 \times 10^{9}\)</span>
 </td>
 </tr>
 <tr>
 <td style="text-align:center;">
-<span class="math inline">\(10\)</span>
+<span class="math inline">\(\small \mathrm{5}\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(999.7\)</span>
+<span class="math inline">\(\small 1000\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(9807\)</span>
+<span class="math inline">\(\small 9810\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(1.310 \times 10^{-3}\)</span>
+<span class="math inline">\(\small 1.501 \times 10^{-3}\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(1.311 \times 10^{-6}\)</span>
+<span class="math inline">\(\small 1.501 \times 10^{-6}\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(1228\)</span>
+<span class="math inline">\(\small 0.8726 \times 10^{3}\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(7.42 \times 10^{-2}\)</span>
+<span class="math inline">\(\small 74.9 \times 10^{-3}\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(2.10 \times 10^{9}\)</span>
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-<span class="math inline">\(15\)</span>
-</td>
-<td style="text-align:center;">
-<span class="math inline">\(999.1\)</span>
-</td>
-<td style="text-align:center;">
-<span class="math inline">\(9801\)</span>
-</td>
-<td style="text-align:center;">
-<span class="math inline">\(1.153 \times 10^{-3}\)</span>
-</td>
-<td style="text-align:center;">
-<span class="math inline">\(1.154 \times 10^{-6}\)</span>
-</td>
-<td style="text-align:center;">
-<span class="math inline">\(1706\)</span>
-</td>
-<td style="text-align:center;">
-<span class="math inline">\(7.35 \times 10^{-2}\)</span>
-</td>
-<td style="text-align:center;">
-<span class="math inline">\(2.14 \times 10^{9}\)</span>
+<span class="math inline">\(\small 2.06 \times 10^{9}\)</span>
 </td>
 </tr>
 <tr>
 <td style="text-align:center;">
-<span class="math inline">\(20\)</span>
+<span class="math inline">\(\small \mathrm{10}\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(998.2\)</span>
+<span class="math inline">\(\small 999.7\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(9793\)</span>
+<span class="math inline">\(\small 9807\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(1.021 \times 10^{-3}\)</span>
+<span class="math inline">\(\small 1.310 \times 10^{-3}\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(1.023 \times 10^{-6}\)</span>
+<span class="math inline">\(\small 1.311 \times 10^{-6}\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(2339\)</span>
+<span class="math inline">\(\small 1.228 \times 10^{3}\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(7.27 \times 10^{-2}\)</span>
+<span class="math inline">\(\small 74.2 \times 10^{-3}\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(2.18 \times 10^{9}\)</span>
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-<span class="math inline">\(25\)</span>
-</td>
-<td style="text-align:center;">
-<span class="math inline">\(997.1\)</span>
-</td>
-<td style="text-align:center;">
-<span class="math inline">\(9781\)</span>
-</td>
-<td style="text-align:center;">
-<span class="math inline">\(9.108 \times 10^{-4}\)</span>
-</td>
-<td style="text-align:center;">
-<span class="math inline">\(9.135 \times 10^{-7}\)</span>
-</td>
-<td style="text-align:center;">
-<span class="math inline">\(3170\)</span>
-</td>
-<td style="text-align:center;">
-<span class="math inline">\(7.20 \times 10^{-2}\)</span>
-</td>
-<td style="text-align:center;">
-<span class="math inline">\(2.22 \times 10^{9}\)</span>
+<span class="math inline">\(\small 2.10 \times 10^{9}\)</span>
 </td>
 </tr>
 <tr>
 <td style="text-align:center;">
-<span class="math inline">\(30\)</span>
+<span class="math inline">\(\small \mathrm{15}\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(995.7\)</span>
+<span class="math inline">\(\small 999.1\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(9768\)</span>
+<span class="math inline">\(\small 9801\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(8.174 \times 10^{-4}\)</span>
+<span class="math inline">\(\small 1.153 \times 10^{-3}\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(8.210 \times 10^{-7}\)</span>
+<span class="math inline">\(\small 1.154 \times 10^{-6}\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(4247\)</span>
+<span class="math inline">\(\small 1.706 \times 10^{3}\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(7.12 \times 10^{-2}\)</span>
+<span class="math inline">\(\small 73.5 \times 10^{-3}\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(2.25 \times 10^{9}\)</span>
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-<span class="math inline">\(35\)</span>
-</td>
-<td style="text-align:center;">
-<span class="math inline">\(994.1\)</span>
-</td>
-<td style="text-align:center;">
-<span class="math inline">\(9752\)</span>
-</td>
-<td style="text-align:center;">
-<span class="math inline">\(7.380 \times 10^{-4}\)</span>
-</td>
-<td style="text-align:center;">
-<span class="math inline">\(7.424 \times 10^{-7}\)</span>
-</td>
-<td style="text-align:center;">
-<span class="math inline">\(5629\)</span>
-</td>
-<td style="text-align:center;">
-<span class="math inline">\(7.04 \times 10^{-2}\)</span>
-</td>
-<td style="text-align:center;">
-<span class="math inline">\(2.26 \times 10^{9}\)</span>
+<span class="math inline">\(\small 2.14 \times 10^{9}\)</span>
 </td>
 </tr>
 <tr>
 <td style="text-align:center;">
-<span class="math inline">\(40\)</span>
+<span class="math inline">\(\small \mathrm{20}\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(992.2\)</span>
+<span class="math inline">\(\small 998.2\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(9734\)</span>
+<span class="math inline">\(\small 9793\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(6.699 \times 10^{-4}\)</span>
+<span class="math inline">\(\small 1.021 \times 10^{-3}\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(6.751 \times 10^{-7}\)</span>
+<span class="math inline">\(\small 1.023 \times 10^{-6}\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(7385\)</span>
+<span class="math inline">\(\small 2.339 \times 10^{3}\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(6.96 \times 10^{-2}\)</span>
+<span class="math inline">\(\small 72.7 \times 10^{-3}\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(2.28 \times 10^{9}\)</span>
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-<span class="math inline">\(45\)</span>
-</td>
-<td style="text-align:center;">
-<span class="math inline">\(990.2\)</span>
-</td>
-<td style="text-align:center;">
-<span class="math inline">\(9714\)</span>
-</td>
-<td style="text-align:center;">
-<span class="math inline">\(6.112 \times 10^{-4}\)</span>
-</td>
-<td style="text-align:center;">
-<span class="math inline">\(6.173 \times 10^{-7}\)</span>
-</td>
-<td style="text-align:center;">
-<span class="math inline">\(9595\)</span>
-</td>
-<td style="text-align:center;">
-<span class="math inline">\(6.88 \times 10^{-2}\)</span>
-</td>
-<td style="text-align:center;">
-<span class="math inline">\(2.29 \times 10^{9}\)</span>
+<span class="math inline">\(\small 2.18 \times 10^{9}\)</span>
 </td>
 </tr>
 <tr>
 <td style="text-align:center;">
-<span class="math inline">\(50\)</span>
+<span class="math inline">\(\small \mathrm{25}\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(988.1\)</span>
+<span class="math inline">\(\small 997.1\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(9693\)</span>
+<span class="math inline">\(\small 9781\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(5.605 \times 10^{-4}\)</span>
+<span class="math inline">\(\small 910.8 \times 10^{-6}\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(5.672 \times 10^{-7}\)</span>
+<span class="math inline">\(\small 913.5 \times 10^{-9}\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(1.235 \times 10^{4}\)</span>
+<span class="math inline">\(\small 3.170 \times 10^{3}\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(6.79 \times 10^{-2}\)</span>
+<span class="math inline">\(\small 72.0 \times 10^{-3}\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(2.29 \times 10^{9}\)</span>
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-<span class="math inline">\(55\)</span>
-</td>
-<td style="text-align:center;">
-<span class="math inline">\(985.7\)</span>
-</td>
-<td style="text-align:center;">
-<span class="math inline">\(9670\)</span>
-</td>
-<td style="text-align:center;">
-<span class="math inline">\(5.162 \times 10^{-4}\)</span>
-</td>
-<td style="text-align:center;">
-<span class="math inline">\(5.237 \times 10^{-7}\)</span>
-</td>
-<td style="text-align:center;">
-<span class="math inline">\(1.576 \times 10^{4}\)</span>
-</td>
-<td style="text-align:center;">
-<span class="math inline">\(6.71 \times 10^{-2}\)</span>
-</td>
-<td style="text-align:center;">
-<span class="math inline">\(2.29 \times 10^{9}\)</span>
+<span class="math inline">\(\small 2.22 \times 10^{9}\)</span>
 </td>
 </tr>
 <tr>
 <td style="text-align:center;">
-<span class="math inline">\(60\)</span>
+<span class="math inline">\(\small \mathrm{30}\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(983.2\)</span>
+<span class="math inline">\(\small 995.7\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(9645\)</span>
+<span class="math inline">\(\small 9768\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(4.776 \times 10^{-4}\)</span>
+<span class="math inline">\(\small 817.4 \times 10^{-6}\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(4.857 \times 10^{-7}\)</span>
+<span class="math inline">\(\small 821.0 \times 10^{-9}\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(1.995 \times 10^{4}\)</span>
+<span class="math inline">\(\small 4.247 \times 10^{3}\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(6.62 \times 10^{-2}\)</span>
+<span class="math inline">\(\small 71.2 \times 10^{-3}\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(2.28 \times 10^{9}\)</span>
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-<span class="math inline">\(65\)</span>
-</td>
-<td style="text-align:center;">
-<span class="math inline">\(980.6\)</span>
-</td>
-<td style="text-align:center;">
-<span class="math inline">\(9619\)</span>
-</td>
-<td style="text-align:center;">
-<span class="math inline">\(4.435 \times 10^{-4}\)</span>
-</td>
-<td style="text-align:center;">
-<span class="math inline">\(4.523 \times 10^{-7}\)</span>
-</td>
-<td style="text-align:center;">
-<span class="math inline">\(2.504 \times 10^{4}\)</span>
-</td>
-<td style="text-align:center;">
-<span class="math inline">\(6.54 \times 10^{-2}\)</span>
-</td>
-<td style="text-align:center;">
-<span class="math inline">\(2.26 \times 10^{9}\)</span>
+<span class="math inline">\(\small 2.25 \times 10^{9}\)</span>
 </td>
 </tr>
 <tr>
 <td style="text-align:center;">
-<span class="math inline">\(70\)</span>
+<span class="math inline">\(\small \mathrm{35}\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(977.7\)</span>
+<span class="math inline">\(\small 994.1\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(9592\)</span>
+<span class="math inline">\(\small 9752\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(4.135 \times 10^{-4}\)</span>
+<span class="math inline">\(\small 738.0 \times 10^{-6}\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(4.229 \times 10^{-7}\)</span>
+<span class="math inline">\(\small 742.4 \times 10^{-9}\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(3.120 \times 10^{4}\)</span>
+<span class="math inline">\(\small 5.629 \times 10^{3}\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(6.45 \times 10^{-2}\)</span>
+<span class="math inline">\(\small 70.4 \times 10^{-3}\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(2.25 \times 10^{9}\)</span>
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-<span class="math inline">\(75\)</span>
-</td>
-<td style="text-align:center;">
-<span class="math inline">\(974.8\)</span>
-</td>
-<td style="text-align:center;">
-<span class="math inline">\(9563\)</span>
-</td>
-<td style="text-align:center;">
-<span class="math inline">\(3.869 \times 10^{-4}\)</span>
-</td>
-<td style="text-align:center;">
-<span class="math inline">\(3.969 \times 10^{-7}\)</span>
-</td>
-<td style="text-align:center;">
-<span class="math inline">\(3.860 \times 10^{4}\)</span>
-</td>
-<td style="text-align:center;">
-<span class="math inline">\(6.36 \times 10^{-2}\)</span>
-</td>
-<td style="text-align:center;">
-<span class="math inline">\(2.23 \times 10^{9}\)</span>
+<span class="math inline">\(\small 2.26 \times 10^{9}\)</span>
 </td>
 </tr>
 <tr>
 <td style="text-align:center;">
-<span class="math inline">\(80\)</span>
+<span class="math inline">\(\small \mathrm{40}\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(971.7\)</span>
+<span class="math inline">\(\small 992.2\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(9533\)</span>
+<span class="math inline">\(\small 9734\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(3.631 \times 10^{-4}\)</span>
+<span class="math inline">\(\small 669.9 \times 10^{-6}\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(3.737 \times 10^{-7}\)</span>
+<span class="math inline">\(\small 675.1 \times 10^{-9}\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(4.742 \times 10^{4}\)</span>
+<span class="math inline">\(\small 7.385 \times 10^{3}\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(6.27 \times 10^{-2}\)</span>
+<span class="math inline">\(\small 69.6 \times 10^{-3}\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(2.20 \times 10^{9}\)</span>
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-<span class="math inline">\(85\)</span>
-</td>
-<td style="text-align:center;">
-<span class="math inline">\(968.5\)</span>
-</td>
-<td style="text-align:center;">
-<span class="math inline">\(9501\)</span>
-</td>
-<td style="text-align:center;">
-<span class="math inline">\(3.419 \times 10^{-4}\)</span>
-</td>
-<td style="text-align:center;">
-<span class="math inline">\(3.530 \times 10^{-7}\)</span>
-</td>
-<td style="text-align:center;">
-<span class="math inline">\(5.787 \times 10^{4}\)</span>
-</td>
-<td style="text-align:center;">
-<span class="math inline">\(6.18 \times 10^{-2}\)</span>
-</td>
-<td style="text-align:center;">
-<span class="math inline">\(2.17 \times 10^{9}\)</span>
+<span class="math inline">\(\small 2.28 \times 10^{9}\)</span>
 </td>
 </tr>
 <tr>
 <td style="text-align:center;">
-<span class="math inline">\(90\)</span>
+<span class="math inline">\(\small \mathrm{45}\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(965.2\)</span>
+<span class="math inline">\(\small 990.2\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(9468\)</span>
+<span class="math inline">\(\small 9714\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(3.229 \times 10^{-4}\)</span>
+<span class="math inline">\(\small 611.2 \times 10^{-6}\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(3.345 \times 10^{-7}\)</span>
+<span class="math inline">\(\small 617.3 \times 10^{-9}\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(7.018 \times 10^{4}\)</span>
+<span class="math inline">\(\small 9.595 \times 10^{3}\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(6.08 \times 10^{-2}\)</span>
+<span class="math inline">\(\small 68.8 \times 10^{-3}\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(2.14 \times 10^{9}\)</span>
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-<span class="math inline">\(95\)</span>
-</td>
-<td style="text-align:center;">
-<span class="math inline">\(961.7\)</span>
-</td>
-<td style="text-align:center;">
-<span class="math inline">\(9434\)</span>
-</td>
-<td style="text-align:center;">
-<span class="math inline">\(3.057 \times 10^{-4}\)</span>
-</td>
-<td style="text-align:center;">
-<span class="math inline">\(3.179 \times 10^{-7}\)</span>
-</td>
-<td style="text-align:center;">
-<span class="math inline">\(8.461 \times 10^{4}\)</span>
-</td>
-<td style="text-align:center;">
-<span class="math inline">\(5.99 \times 10^{-2}\)</span>
-</td>
-<td style="text-align:center;">
-<span class="math inline">\(2.10 \times 10^{9}\)</span>
+<span class="math inline">\(\small 2.28 \times 10^{9}\)</span>
 </td>
 </tr>
 <tr>
 <td style="text-align:center;">
-<span class="math inline">\(100\)</span>
+<span class="math inline">\(\small \mathrm{50}\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(958.1\)</span>
+<span class="math inline">\(\small 988.1\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(9399\)</span>
+<span class="math inline">\(\small 9693\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(2.902 \times 10^{-4}\)</span>
+<span class="math inline">\(\small 560.5 \times 10^{-6}\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(3.029 \times 10^{-7}\)</span>
+<span class="math inline">\(\small 567.2 \times 10^{-9}\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(1.014 \times 10^{5}\)</span>
+<span class="math inline">\(\small 12.35 \times 10^{3}\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(5.89 \times 10^{-2}\)</span>
+<span class="math inline">\(\small 67.9 \times 10^{-3}\)</span>
 </td>
 <td style="text-align:center;">
-<span class="math inline">\(2.07 \times 10^{9}\)</span>
+<span class="math inline">\(\small 2.29 \times 10^{9}\)</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+<span class="math inline">\(\small \mathrm{55}\)</span>
+</td>
+<td style="text-align:center;">
+<span class="math inline">\(\small 985.7\)</span>
+</td>
+<td style="text-align:center;">
+<span class="math inline">\(\small 9670\)</span>
+</td>
+<td style="text-align:center;">
+<span class="math inline">\(\small 516.2 \times 10^{-6}\)</span>
+</td>
+<td style="text-align:center;">
+<span class="math inline">\(\small 523.7 \times 10^{-9}\)</span>
+</td>
+<td style="text-align:center;">
+<span class="math inline">\(\small 15.76 \times 10^{3}\)</span>
+</td>
+<td style="text-align:center;">
+<span class="math inline">\(\small 67.1 \times 10^{-3}\)</span>
+</td>
+<td style="text-align:center;">
+<span class="math inline">\(\small 2.28 \times 10^{9}\)</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+<span class="math inline">\(\small \mathrm{60}\)</span>
+</td>
+<td style="text-align:center;">
+<span class="math inline">\(\small 983.2\)</span>
+</td>
+<td style="text-align:center;">
+<span class="math inline">\(\small 9645\)</span>
+</td>
+<td style="text-align:center;">
+<span class="math inline">\(\small 477.6 \times 10^{-6}\)</span>
+</td>
+<td style="text-align:center;">
+<span class="math inline">\(\small 485.7 \times 10^{-9}\)</span>
+</td>
+<td style="text-align:center;">
+<span class="math inline">\(\small 19.95 \times 10^{3}\)</span>
+</td>
+<td style="text-align:center;">
+<span class="math inline">\(\small 66.2 \times 10^{-3}\)</span>
+</td>
+<td style="text-align:center;">
+<span class="math inline">\(\small 2.28 \times 10^{9}\)</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+<span class="math inline">\(\small \mathrm{65}\)</span>
+</td>
+<td style="text-align:center;">
+<span class="math inline">\(\small 980.6\)</span>
+</td>
+<td style="text-align:center;">
+<span class="math inline">\(\small 9619\)</span>
+</td>
+<td style="text-align:center;">
+<span class="math inline">\(\small 443.5 \times 10^{-6}\)</span>
+</td>
+<td style="text-align:center;">
+<span class="math inline">\(\small 452.3 \times 10^{-9}\)</span>
+</td>
+<td style="text-align:center;">
+<span class="math inline">\(\small 25.04 \times 10^{3}\)</span>
+</td>
+<td style="text-align:center;">
+<span class="math inline">\(\small 65.4 \times 10^{-3}\)</span>
+</td>
+<td style="text-align:center;">
+<span class="math inline">\(\small 2.26 \times 10^{9}\)</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+<span class="math inline">\(\small \mathrm{70}\)</span>
+</td>
+<td style="text-align:center;">
+<span class="math inline">\(\small 977.7\)</span>
+</td>
+<td style="text-align:center;">
+<span class="math inline">\(\small 9592\)</span>
+</td>
+<td style="text-align:center;">
+<span class="math inline">\(\small 413.5 \times 10^{-6}\)</span>
+</td>
+<td style="text-align:center;">
+<span class="math inline">\(\small 422.9 \times 10^{-9}\)</span>
+</td>
+<td style="text-align:center;">
+<span class="math inline">\(\small 31.20 \times 10^{3}\)</span>
+</td>
+<td style="text-align:center;">
+<span class="math inline">\(\small 64.5 \times 10^{-3}\)</span>
+</td>
+<td style="text-align:center;">
+<span class="math inline">\(\small 2.25 \times 10^{9}\)</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+<span class="math inline">\(\small \mathrm{75}\)</span>
+</td>
+<td style="text-align:center;">
+<span class="math inline">\(\small 974.8\)</span>
+</td>
+<td style="text-align:center;">
+<span class="math inline">\(\small 9563\)</span>
+</td>
+<td style="text-align:center;">
+<span class="math inline">\(\small 386.9 \times 10^{-6}\)</span>
+</td>
+<td style="text-align:center;">
+<span class="math inline">\(\small 396.9 \times 10^{-9}\)</span>
+</td>
+<td style="text-align:center;">
+<span class="math inline">\(\small 38.60 \times 10^{3}\)</span>
+</td>
+<td style="text-align:center;">
+<span class="math inline">\(\small 63.6 \times 10^{-3}\)</span>
+</td>
+<td style="text-align:center;">
+<span class="math inline">\(\small 2.22 \times 10^{9}\)</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+<span class="math inline">\(\small \mathrm{80}\)</span>
+</td>
+<td style="text-align:center;">
+<span class="math inline">\(\small 971.7\)</span>
+</td>
+<td style="text-align:center;">
+<span class="math inline">\(\small 9533\)</span>
+</td>
+<td style="text-align:center;">
+<span class="math inline">\(\small 363.1 \times 10^{-6}\)</span>
+</td>
+<td style="text-align:center;">
+<span class="math inline">\(\small 373.7 \times 10^{-9}\)</span>
+</td>
+<td style="text-align:center;">
+<span class="math inline">\(\small 47.42 \times 10^{3}\)</span>
+</td>
+<td style="text-align:center;">
+<span class="math inline">\(\small 62.7 \times 10^{-3}\)</span>
+</td>
+<td style="text-align:center;">
+<span class="math inline">\(\small 2.20 \times 10^{9}\)</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+<span class="math inline">\(\small \mathrm{85}\)</span>
+</td>
+<td style="text-align:center;">
+<span class="math inline">\(\small 968.5\)</span>
+</td>
+<td style="text-align:center;">
+<span class="math inline">\(\small 9501\)</span>
+</td>
+<td style="text-align:center;">
+<span class="math inline">\(\small 341.9 \times 10^{-6}\)</span>
+</td>
+<td style="text-align:center;">
+<span class="math inline">\(\small 353.0 \times 10^{-9}\)</span>
+</td>
+<td style="text-align:center;">
+<span class="math inline">\(\small 57.87 \times 10^{3}\)</span>
+</td>
+<td style="text-align:center;">
+<span class="math inline">\(\small 61.8 \times 10^{-3}\)</span>
+</td>
+<td style="text-align:center;">
+<span class="math inline">\(\small 2.17 \times 10^{9}\)</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+<span class="math inline">\(\small \mathrm{90}\)</span>
+</td>
+<td style="text-align:center;">
+<span class="math inline">\(\small 965.2\)</span>
+</td>
+<td style="text-align:center;">
+<span class="math inline">\(\small 9468\)</span>
+</td>
+<td style="text-align:center;">
+<span class="math inline">\(\small 322.9 \times 10^{-6}\)</span>
+</td>
+<td style="text-align:center;">
+<span class="math inline">\(\small 334.5 \times 10^{-9}\)</span>
+</td>
+<td style="text-align:center;">
+<span class="math inline">\(\small 70.18 \times 10^{3}\)</span>
+</td>
+<td style="text-align:center;">
+<span class="math inline">\(\small 60.8 \times 10^{-3}\)</span>
+</td>
+<td style="text-align:center;">
+<span class="math inline">\(\small 2.14 \times 10^{9}\)</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+<span class="math inline">\(\small \mathrm{95}\)</span>
+</td>
+<td style="text-align:center;">
+<span class="math inline">\(\small 961.7\)</span>
+</td>
+<td style="text-align:center;">
+<span class="math inline">\(\small 9434\)</span>
+</td>
+<td style="text-align:center;">
+<span class="math inline">\(\small 305.7 \times 10^{-6}\)</span>
+</td>
+<td style="text-align:center;">
+<span class="math inline">\(\small 317.9 \times 10^{-9}\)</span>
+</td>
+<td style="text-align:center;">
+<span class="math inline">\(\small 84.61 \times 10^{3}\)</span>
+</td>
+<td style="text-align:center;">
+<span class="math inline">\(\small 59.9 \times 10^{-3}\)</span>
+</td>
+<td style="text-align:center;">
+<span class="math inline">\(\small 2.10 \times 10^{9}\)</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+<span class="math inline">\(\small \mathrm{100}\)</span>
+</td>
+<td style="text-align:center;">
+<span class="math inline">\(\small 958.1\)</span>
+</td>
+<td style="text-align:center;">
+<span class="math inline">\(\small 9399\)</span>
+</td>
+<td style="text-align:center;">
+<span class="math inline">\(\small 290.2 \times 10^{-6}\)</span>
+</td>
+<td style="text-align:center;">
+<span class="math inline">\(\small 302.9 \times 10^{-9}\)</span>
+</td>
+<td style="text-align:center;">
+<span class="math inline">\(\small 101.4 \times 10^{3}\)</span>
+</td>
+<td style="text-align:center;">
+<span class="math inline">\(\small 58.9 \times 10^{-3}\)</span>
+</td>
+<td style="text-align:center;">
+<span class="math inline">\(\small 2.07 \times 10^{9}\)</span>
 </td>
 </tr>
 </tbody>
@@ -2477,7 +2488,7 @@ Resources: Examples Using R</a>.</p>
 <div id="license" class="section level2">
 <h2>License</h2>
 <p><a href="https://cran.r-project.org/web/licenses/GPL-3">GPL-3</a>
-2024-03-05 Ed Maurer</p>
+2024-11-17 Ed Maurer</p>
 </div>
 </div>
 

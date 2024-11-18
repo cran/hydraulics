@@ -1,6 +1,6 @@
-29489ed003fc0bef729532bafc9aec4e *DESCRIPTION
+85c4d0292f08c1c46dc86fbeba6e759c *DESCRIPTION
 3ba9bcdc003a87f7cfc9b81fdf5c1e2e *NAMESPACE
-d2728793a12cb909fc4c858a6d2874d1 *NEWS.md
+29592b82b1358f1476a138a495c5c076 *NEWS.md
 1002d5d93e604307f8d969ded4644fea *R/atmos_properties.R
 2cebf6d6981ea138a4564fbeaa1c61ec *R/atmos_table.R
 2cbb9a86c77aae3d4505aedcceaf7ad2 *R/darcy_weisbach.R
@@ -11,7 +11,7 @@ f47ae1768cfeaae5fff9f91dadd1887f *R/f_colebrook.R
 0753db721d7b50b0071096fef3ba4022 *R/manningt.R
 0c1fcfc6f44ed77b00de151ee5dde5cc *R/moody.R
 948f0d433d60e7a9ae126edc22e8c3a6 *R/operpoint.R
-d3724b0c2ed093d2effaf983650d8b04 *R/pumpcurve.R
+c477824d78314cb747c507e08f0df029 *R/pumpcurve.R
 35be121190434617672825b1a5693c41 *R/sequent_depth.R
 261487c566fca51af899e3d67452e01d *R/spec_energy_trap.R
 74c9612211586c8a4c1160b94ab635cb *R/systemcurve.R
@@ -21,9 +21,9 @@ f0c34bcc80a213ed623c8eae95b99a67 *R/xc_circle.R
 06c3fbc22c2ec968216f9df0e554da8d *R/xc_trap.R
 1132402376d23ede2440d1dce0aa60cf *README.md
 131f696bc89f1fd56f4faa5e87e101d6 *build/vignette.rds
-b02a3063924255e6b646d2ca43ca0f70 *inst/doc/hydraulics_vignette.R
-7ccfcd18d8a629e89014c7a6bbdfcb89 *inst/doc/hydraulics_vignette.Rmd
-338525df66ef75bf9639114873c9e798 *inst/doc/hydraulics_vignette.html
+01af26c6ead4c6e40a85dd2984d9ef09 *inst/doc/hydraulics_vignette.R
+1b03798e6bfbcc20c80c2f8e83ae0a5b *inst/doc/hydraulics_vignette.Rmd
+f21476219c21eef3042f8c285efc69da *inst/doc/hydraulics_vignette.html
 74a52d8ff23727a75ae2b22d270b1b62 *man/atmos_table.Rd
 622e29106d0f148bed42130c900e4945 *man/atmosprops.Rd
 86db2e502419af23e5b8cf816f6f8c74 *man/colebrook.Rd
@@ -49,4 +49,4 @@ a7ff87fbf91eba9475f88b8fa6de2378 *man/xc_trap.Rd
 3213bc605692688d847e675ccee0bc45 *vignettes/TDH_Example_2_Diagram.png
 d3ec6d48fade0123cef2fa5b7dc56368 *vignettes/goulds_pump_3409.png
 f7f46ef227a6c36ad1cc76f7273c6fe9 *vignettes/hardycross_system.png
-7ccfcd18d8a629e89014c7a6bbdfcb89 *vignettes/hydraulics_vignette.Rmd
+1b03798e6bfbcc20c80c2f8e83ae0a5b *vignettes/hydraulics_vignette.Rmd
